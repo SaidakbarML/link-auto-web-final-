@@ -21,7 +21,7 @@ def load_encoder():
 @st.cache_resource
 def load_model():
     try:
-        with open("CHEVROLET_DAEWOO_RAVON_LGBM_tencoded2.pkl", "rb") as f:
+        with open("CHEVROLET_DAEWOO_RAVON_LGBM_logtuned.pkl", "rb") as f:
             return pickle.load(f)
     except FileNotFoundError:
         st.error("⚠ Model file not found!")
@@ -40,24 +40,24 @@ model = load_model()
 # ---------------------------------------------------------
 #  SAFE TIME INDEX FUNCTION
 # ---------------------------------------------------------
-def time_index(df):
+# def time_index(df):
 
-    if "month_year" not in df.columns:
-        raise ValueError("'month_year' is missing!")
+#     if "month_year" not in df.columns:
+#         raise ValueError("'month_year' is missing!")
 
-    df["month_year"] = pd.to_datetime(df["month_year"])
+#     df["month_year"] = pd.to_datetime(df["month_year"])
 
-    # For 1-row input: no need sorting
-    df["time_index"] = (
-        (df["month_year"].dt.year - df["month_year"].dt.year.min()) * 12 +
-        df["month_year"].dt.month
-    )
+#     # For 1-row input: no need sorting
+#     df["time_index"] = (
+#         (df["month_year"].dt.year - df["month_year"].dt.year.min()) * 12 +
+#         df["month_year"].dt.month
+#     )
 
-    df["month"] = df["month_year"].dt.month
-    df["month_sin"] = np.sin(2 * np.pi * df["month"] / 12)
-    df["month_cos"] = np.cos(2 * np.pi * df["month"] / 12)
+#     df["month"] = df["month_year"].dt.month
+#     df["month_sin"] = np.sin(2 * np.pi * df["month"] / 12)
+#     df["month_cos"] = np.cos(2 * np.pi * df["month"] / 12)
 
-    return df.drop(columns=["month_year", "month"])
+#     return df.drop(columns=["month_year", "month"])
 
 # def add_time_features_from_month_year(df: pd.DataFrame, col: str) -> pd.DataFrame:
 #     # Convert month_year to datetime
@@ -138,7 +138,7 @@ with col1:
     transmission = st.radio(
         "Transmission",
         options=[0, 1],
-        format_func=lambda x: "Manual" if x == 0 else "Automatic",
+        format_func=lambda x: "Automatic" if x == 0 else "Manual",
         horizontal=True
     )
 
@@ -162,7 +162,7 @@ with col1:
 
     brand_type = st.selectbox(
         "Brand Type",
-        options=[1],
+        options=[1,0],
         
     )
 
@@ -210,7 +210,8 @@ if st.button("predict price", type="primary", use_container_width=True):
                 "mileage": [mileage],
                 "release_year": [release_year],
                 "engine_volume": [engine_volume],
-                "month_year": [pd.Timestamp(datetime.now())],
+                "month_year": [2025],
+                # 'car_age':[2026-release_year],
                 "brand_type": [brand_type],
                 "car_name": [car_name],
                 "Air_Conditioner": [int(air_conditioner)],
@@ -234,6 +235,11 @@ if st.button("predict price", type="primary", use_container_width=True):
                 "owners_count", "car_condition",
                 "color", "body_type", "state"
             ]
+            # cat_cols = [
+            #     "car_name", "fuel_type", "item_type",
+            #     "car_condition",
+            #     "color", "body_type", "state"
+            # ]
             orig_cols = input_df.columns.tolist()
             transformed = encoder.transform(input_df, cat_cols)
 
@@ -250,14 +256,17 @@ if st.button("predict price", type="primary", use_container_width=True):
                 # rebuild with correct names
                 input_df = pd.DataFrame(transformed, columns=new_cols)
             # Time index create
-            input_df = time_index(input_df)
+            # input_df = time_index(input_df)
+            input_df.to_csv('testsdad.csv',index=False)
 
             # Prediction
-            input_df = input_df[model.feature_name_]
-
-            input_df.to_csv('test.csv',index=False)
+            try:
+                input_df = input_df[model.feature_name_]
+            except:
+                print('error coming from input df ')
+            
             prediction = model.predict(input_df)[0]
-
+            prediction = np.expm1(prediction)
             st.success("✅ Prediction Complete!")
 
             # Display
