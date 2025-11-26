@@ -74,7 +74,7 @@ with col1:
     transmission = st.radio("transmission", options=[0, 1], index=0, format_func=lambda x: "automatic" if x == 0 else "manual", horizontal=True)
     mileage = st.number_input("mileage (km)", min_value=0.0, max_value=500000.0, value=80000.0, step=1000.0)
     engine_volume = st.number_input("engine volume (L)", min_value=0.5, max_value=8.0, value=1.5, step=0.1)
-    brand_type = st.selectbox("brand type", options=[1, 0], format_func=lambda x: "foreign" if x == 1 else "domestic")
+    brand_type = st.selectbox("brand type", options=[1, 0], format_func=lambda x: "chevrolet" if x == 1 else "daewoo")
 
 with col2:
     st.subheader("details")
@@ -228,4 +228,5 @@ if st.button("predict price", type="primary"):
                 st.write("- invalid input")
 
 st.markdown("---")
+
 # st.markdown("<div style='text-align: center; color: gray;'><p>car price predictor | built with streamlit</p></div>", unsafe_allow_html=True)
