@@ -1,0 +1,2 @@
+transmission,mileage,release_year,engine_volume,year,brand_type,owners_count,car_name_tencoded,body_type_tencoded,fuel_type_tencoded,item_type_tencoded,car_condition_tencoded,color_tencoded,state_tencoded
+0,80000.0,2020,1.5,2025,1,1,12381.550175954082,11904.237410972919,11471.116103356924,12598.268902864744,5182.867166308173,10404.078873555049,10711.210734714039
