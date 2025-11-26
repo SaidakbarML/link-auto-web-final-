@@ -176,7 +176,7 @@ if st.button("predict price", type="primary"):
                     total_feature_value += feature_price
             
             price_with_features = base_price + total_feature_value
-            final_prediction = price_with_features * 0.9
+            final_prediction = price_with_features * 0.85
 
             st.success("prediction complete")
             col_r1, col_r2, col_r3 = st.columns(3)
@@ -230,3 +230,4 @@ if st.button("predict price", type="primary"):
 st.markdown("---")
 
 # st.markdown("<div style='text-align: center; color: gray;'><p>car price predictor | built with streamlit</p></div>", unsafe_allow_html=True)
+
